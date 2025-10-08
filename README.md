@@ -18,6 +18,10 @@
 
 Este projeto é um *chatbot* interativo construído com **React** e impulsionado pela **API do Google Gemini 1.5 Flash**. Ele simula um assistente virtual para a cafeteria Aroma Beans Coffee, combinando a inteligência da IA com funcionalidades de front-end dinâmicas.
 
+<br/>
+
+<br/>
+
 ## ✨ Principais Funcionalidades
 
 * **Inteligência Gemini:** O chatbot responde a perguntas sobre o menu, horários e localização da cafeteria.
@@ -25,11 +29,19 @@ Este projeto é um *chatbot* interativo construído com **React** e impulsionado
 * **Interação por Voz:** Funcionalidade de **Speech-to-Text** integrada (microfone) para uma experiência de conversação mais natural.
 * **Criação de Conteúdo:** Gera sugestões de bebidas e poemas temáticos, demonstrando as capacidades multimodais da IA.
 
+<br/>
+
+<br/>
+
 ## 🛠️ Tecnologias
 
 * **Front-end:** ReactJS com Vite
 * **IA:** Google Gemini API (`gemini-1.5-flash` e `gemini-1.5-flash-tts`)
 * **Deployment:** `gh-pages` para GitHub Pages
+
+<br/>
+
+<br/>
 
 ## 🚀 Como Executar Localmente
 
