@@ -1,8 +1,23 @@
 import { useEffect, useRef, useState } from "react";
+import { BrowserRouter as Router, Routes, Route, Link, useLocation } from "react-router-dom";
 import ChatbotIcon from "./components/ChatbotIcon";
 import ChatForm from "./components/ChatForm";
 import ChatMessage from "./components/ChatMessage";
 import { companyInfo } from "./companyInfo";
+import Home from "./pages/Home";
+import History from "./pages/History";
+import Menu from "./pages/Menu";
+
+// --- NOVO COMPONENTE PARA ROLAR AO TOPO ---
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+};
 
 const App = () => {
   const chatBodyRef = useRef();
@@ -10,18 +25,21 @@ const App = () => {
   const [chatHistory, setChatHistory] = useState([
     {
       hideInChat: true,
-      role: "model",
+      role: "user",
       text: companyInfo,
     },
+    {
+      hideInChat: true,
+      role: "model",
+      text: "Entendido. Usarei formatação em negrito e listas.",
+    }
   ]);
 
   const generateBotResponse = async (history) => {
-    // Helper function to update chat history
     const updateHistory = (text, isError = false) => {
       setChatHistory((prev) => [...prev.filter((msg) => msg.text != "Thinking..."), { role: "model", text, isError }]);
     };
 
-    // Format chat history for API request
     history = history.map(({ role, text }) => ({ role, parts: [{ text }] }));
 
     const requestOptions = {
@@ -31,65 +49,116 @@ const App = () => {
     };
 
     try {
-      // Make the API call to get the bot's response
       const response = await fetch(import.meta.env.VITE_API_URL, requestOptions);
       const data = await response.json();
-      if (!response.ok) throw new Error(data?.error.message || "Something went wrong!");
+      if (!response.ok) throw new Error(data?.error.message || "Algo deu errado!");
 
-      // Clean and update chat history with bot's response
-      const apiResponseText = data.candidates[0].content.parts[0].text.replace(/\*\*(.*?)\*\*/g, "$1").trim();
+      const apiResponseText = data.candidates[0].content.parts[0].text.trim();
       updateHistory(apiResponseText);
     } catch (error) {
-      // Update chat history with the error message
       updateHistory(error.message, true);
     }
   };
 
   useEffect(() => {
-    // Auto-scroll whenever chat history updates
-    chatBodyRef.current.scrollTo({ top: chatBodyRef.current.scrollHeight, behavior: "smooth" });
-  }, [chatHistory]);
+    if(chatBodyRef.current) {
+      chatBodyRef.current.scrollTo({ top: chatBodyRef.current.scrollHeight, behavior: "smooth" });
+    }
+  }, [chatHistory, showChatbot]);
 
   return (
-    <div className={`container ${showChatbot ? "show-chatbot" : ""}`}>
-      <button onClick={() => setShowChatbot((prev) => !prev)} id="chatbot-toggler">
-        <span className="material-symbols-rounded">mode_comment</span>
-        <span className="material-symbols-rounded">close</span>
-      </button>
+    <Router>
+      {/* Componente que força o scroll para o topo ao mudar de rota */}
+      <ScrollToTop />
 
-      <div className="chatbot-popup">
-        {/* Chatbot Header */}
-        <div className="chat-header">
-          <div className="header-info">
-            <ChatbotIcon />
-            <h2 className="logo-text">Chatbot</h2>
+      <div className={`container ${showChatbot ? "show-chatbot" : ""}`}>
+        
+        {/* HEADER DO SITE */}
+        <header className="site-header">
+          <div className="logo">Aroma Beans</div>
+          <div className="nav-container">
+            <nav className="nav-links">
+              <Link to="/">Início</Link>
+              <Link to="/menu">Menu</Link>
+              <Link to="/history">Sobre</Link>
+            </nav>
+            <button onClick={() => setShowChatbot((prev) => !prev)} id="chatbot-toggler">
+              <span className="material-symbols-rounded">mode_comment</span>
+              <span className="material-symbols-rounded">close</span>
+            </button>
           </div>
-          <button onClick={() => setShowChatbot((prev) => !prev)} className="material-symbols-rounded">
-            keyboard_arrow_down
-          </button>
-        </div>
+        </header>
 
-        {/* Chatbot Body */}
-        <div ref={chatBodyRef} className="chat-body">
-          <div className="message bot-message">
-            <ChatbotIcon />
-            <p className="message-text">
-              Hey there 👋 <br /> How can I help you today?
-            </p>
+        {/* CONTEÚDO DAS PÁGINAS */}
+        <main className="main-content">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/history" element={<History />} />
+            <Route path="/menu" element={<Menu />} />
+          </Routes>
+        </main>
+
+        {/* RODAPÉ */}
+        <footer className="site-footer">
+          <div className="footer-content">
+            <div className="footer-column">
+              <h2 className="footer-logo">Aroma Beans</h2>
+              <p>Café artesanal e momentos únicos desde 2010.</p>
+            </div>
+            <div className="footer-column">
+              <h3>Contato</h3>
+              <ul className="footer-list">
+                <li>Rua das Flores, 123 - SP</li>
+                <li>(11) 99999-9999</li>
+                <li>contato@aromabeans.com</li>
+              </ul>
+            </div>
+            <div className="footer-column">
+              <h3>Horário</h3>
+              <ul className="footer-list times">
+                <li><span>Seg-Sex</span><span>07:00 - 20:00</span></li>
+                <li><span>Sáb</span><span>08:00 - 22:00</span></li>
+              </ul>
+            </div>
+            <div className="footer-column">
+              <h3>Novidades</h3>
+              <form className="newsletter-form" onSubmit={(e) => e.preventDefault()}>
+                <input type="email" placeholder="Seu e-mail" />
+                <button type="submit">→</button>
+              </form>
+            </div>
+          </div>
+          <div className="footer-bottom"><p>&copy; 2024 Aroma Beans.</p></div>
+        </footer>
+
+        {/* CHATBOT (Estrutura Modificada) */}
+        <div className="chatbot-popup">
+          
+          {/* Cabeçalho do Chatbot Personalizado */}
+          <div className="chat-header">
+            <div className="header-icon-left">
+              <ChatbotIcon />
+            </div>
+            <h2 className="chat-title-center">CHATBOOT</h2>
           </div>
 
-          {/* Render the chat history dynamically */}
-          {chatHistory.map((chat, index) => (
-            <ChatMessage key={index} chat={chat} />
-          ))}
+          <div ref={chatBodyRef} className="chat-body">
+            <div className="message bot-message">
+              <ChatbotIcon />
+              <p className="message-text">Olá! 👋 <br /> Sou o especialista da Aroma Beans. Quer ajuda para escolher um café hoje?</p>
+            </div>
+            {chatHistory.map((chat, index) => (
+              <ChatMessage key={index} chat={chat} />
+            ))}
+          </div>
+          
+          <div className="chat-footer">
+            <ChatForm chatHistory={chatHistory} setChatHistory={setChatHistory} generateBotResponse={generateBotResponse} />
+          </div>
         </div>
 
-        {/* Chatbot Footer */}
-        <div className="chat-footer">
-          <ChatForm chatHistory={chatHistory} setChatHistory={setChatHistory} generateBotResponse={generateBotResponse} />
-        </div>
       </div>
-    </div>
+    </Router>
   );
 };
 
