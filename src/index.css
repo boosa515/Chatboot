@@ -57,7 +57,7 @@ body {
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background: var(--gradient-copper); /* Fundo Gradiente de volta */
+  background: var(--gradient-copper);
   box-shadow: var(--shadow-warm);
   transition: all 0.3s ease;
 }
