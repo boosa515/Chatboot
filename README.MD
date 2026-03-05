@@ -47,6 +47,12 @@ O principal diferencial é a integração com a **API do Google Gemini**, que fo
 <br/>
 <br/>
 
+## Project Screen
+
+<div align="center">
+  <img src="imagens/inicial.png" width="250" alt="Tela 1">
+</div>
+
 # 1. Configurar o Ambiente
 
   Configure a API Key Crie um arquivo .env na raiz do projeto e adicione sua chave:
