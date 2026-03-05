@@ -49,8 +49,8 @@ O principal diferencial é a integração com a **API do Google Gemini**, que fo
 
 ## Project Screen
 
-<div align="center">
-  <img src="imagens/inicial.png" width="250" alt="Tela 1">
+<div>
+  <img src="imagens/inicial.png">
 </div>
 
 # 1. Configurar o Ambiente
