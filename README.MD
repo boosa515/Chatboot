@@ -19,7 +19,7 @@
 
 <br/>
 
-## 💡 Sobre o Projeto
+## Sobre o Projeto
 
 Assistente virtual inteligente desenvolvido em **React** com **Vite**, criado para a cafeteria fictícia **Aroma Beans**.
 
@@ -27,7 +27,7 @@ O principal diferencial é a integração com a **API do Google Gemini**, que fo
 <br/>
 <br/>
 
-## ⚙️ Principais Funcionalidades
+## Principais Funcionalidades
 
 * **IA Generativa:** Chatbot integrado ao Google Gemini 1.5 Flash, configurado com instruções de sistema personalizadas (Persona de Barista).
 * **Navegação SPA:** Sistema de rotas (Home, Menu, História) utilizando `react-router-dom` sem recarregamento de página.
